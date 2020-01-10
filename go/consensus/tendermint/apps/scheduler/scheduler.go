@@ -516,6 +516,18 @@ func (app *schedulerApplication) electCommittee(ctx *abci.Context, epoch epochti
 	if err != nil {
 		return err
 	}
+	var nodeIDs []signature.PublicKey
+	for _, n := range nodeList {
+		nodeIDs = append(nodeIDs, n.ID)
+	}
+	ctx.Logger().Debug("%%% here's the perm",
+		"idxs", idxs,
+		"node_ids", nodeIDs,
+		"epoch", epoch,
+		"beacon", beacon,
+		"runtime_id", rt.ID,
+		"kind", kind,
+	)
 
 	var members []*scheduler.CommitteeNode
 	for i := 0; i < len(idxs); i++ {
