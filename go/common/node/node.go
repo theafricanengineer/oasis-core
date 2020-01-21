@@ -332,11 +332,6 @@ func (c *CapabilityTEE) Verify(ts time.Time) error {
 	}
 }
 
-// String returns a string representation of itself.
-func (n *Node) String() string {
-	return "<Node id=" + n.ID.String() + ">"
-}
-
 // MultiSignedNode is a multi-signed blob containing a CBOR-serialized Node.
 type MultiSignedNode struct {
 	signature.MultiSigned
