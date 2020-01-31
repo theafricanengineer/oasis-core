@@ -143,10 +143,8 @@ func SanityCheckAccountShares(acct *Account, delegations map[signature.PublicKey
 
 // SanityCheck does basic sanity checking on the genesis state.
 func (g *Genesis) SanityCheck(now epochtime.EpochTime) error { // nolint: gocyclo
-	for thr, val := range g.Parameters.Thresholds {
-		if !val.IsValid() {
-			return fmt.Errorf("staking: sanity check failed: threshold '%s' has invalid value", thr.String())
-		}
+	if err := g.Parameters.SanityCheck(); err != nil {
+		return fmt.Errorf("staking: sanity check failed: %w", err)
 	}
 
 	if !g.TotalSupply.IsValid() {
