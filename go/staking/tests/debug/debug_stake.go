@@ -7,12 +7,16 @@ import (
 
 	"github.com/oasislabs/oasis-core/go/common/crypto/signature"
 	memorySigner "github.com/oasislabs/oasis-core/go/common/crypto/signature/signers/memory"
+	"github.com/oasislabs/oasis-core/go/common/entity"
 	"github.com/oasislabs/oasis-core/go/common/quantity"
 	"github.com/oasislabs/oasis-core/go/staking/api"
 )
 
 var (
-	DebugStateTestTotalSupply = QtyFromInt(math.MaxInt64)
+	DebugStateTotalSupply         = QtyFromInt(math.MaxInt64)
+	DebugStateGeneralBalance      = QtyFromInt(math.MaxInt64 - 100)
+	DebugStateEscrowActiveBalance = QtyFromInt(100)
+	DebugStateEscrowActiveShares  = QtyFromInt(1000)
 
 	DebugGenesisState = api.Genesis{
 		Parameters: api.ConsensusParameters{
@@ -37,11 +41,24 @@ var (
 			RewardFactorEpochSigned: QtyFromInt(1),
 			// Zero RewardFactorBlockProposed is normal.
 		},
-		TotalSupply: DebugStateTestTotalSupply,
+		TotalSupply: DebugStateTotalSupply,
 		Ledger: map[signature.PublicKey]*api.Account{
 			DebugStateSrcID: &api.Account{
 				General: api.GeneralAccount{
-					Balance: DebugStateTestTotalSupply,
+					Balance: DebugStateGeneralBalance,
+				},
+				Escrow: api.EscrowAccount{
+					Active: api.SharePool{
+						Balance:     DebugStateEscrowActiveBalance,
+						TotalShares: DebugStateEscrowActiveShares,
+					},
+				},
+			},
+		},
+		Delegations: map[signature.PublicKey]map[signature.PublicKey]*api.Delegation{
+			DebugStateSrcID: map[signature.PublicKey]*api.Delegation{
+				DebugStateSrcID: &api.Delegation{
+					Shares: DebugStateEscrowActiveShares,
 				},
 			},
 		},
@@ -51,6 +68,9 @@ var (
 	DebugStateSrcID     = DebugStateSrcSigner.Public()
 	destSigner          = mustGenerateSigner()
 	DebugStateDestID    = destSigner.Public()
+	DebugStateSrcEntity = entity.Entity{
+		ID: DebugStateSrcID,
+	}
 )
 
 func QtyFromInt(n int) quantity.Quantity {
