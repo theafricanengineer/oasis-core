@@ -200,14 +200,6 @@ type Backend interface {
 	// NodeEvent on node registration changes.
 	WatchNodes(context.Context) (<-chan *NodeEvent, pubsub.ClosableSubscription, error)
 
-	// WatchNodeList returns a channel that produces a stream of NodeList.
-	// Upon subscription, the node list for the current epoch will be sent
-	// immediately if available.
-	//
-	// Each node list will be sorted by node ID in lexographically ascending
-	// order.
-	WatchNodeList(context.Context) (<-chan *NodeList, pubsub.ClosableSubscription, error)
-
 	// GetRuntime gets a runtime by ID.
 	GetRuntime(context.Context, *NamespaceQuery) (*Runtime, error)
 

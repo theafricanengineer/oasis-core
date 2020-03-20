@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"github.com/eapache/channels"
-	"github.com/pkg/errors"
 	abcitypes "github.com/tendermint/tendermint/abci/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 
@@ -95,14 +94,6 @@ func (tb *tendermintBackend) GetNodes(ctx context.Context, height int64) ([]*nod
 func (tb *tendermintBackend) WatchNodes(ctx context.Context) (<-chan *api.NodeEvent, pubsub.ClosableSubscription, error) {
 	typedCh := make(chan *api.NodeEvent)
 	sub := tb.nodeNotifier.Subscribe()
-	sub.Unwrap(typedCh)
-
-	return typedCh, sub, nil
-}
-
-func (tb *tendermintBackend) WatchNodeList(ctx context.Context) (<-chan *api.NodeList, pubsub.ClosableSubscription, error) {
-	typedCh := make(chan *api.NodeList)
-	sub := tb.nodeListNotifier.Subscribe()
 	sub.Unwrap(typedCh)
 
 	return typedCh, sub, nil
@@ -250,16 +241,6 @@ func (tb *tendermintBackend) onABCIEvents(ctx context.Context, events []abcitype
 					Entity:         &dereg.Entity,
 					IsRegistration: false,
 				})
-			} else if bytes.Equal(pair.GetKey(), app.KeyRegistryNodeListEpoch) {
-				nl, err := tb.getNodeList(ctx, height)
-				if err != nil {
-					tb.logger.Error("worker: failed to get node list",
-						"height", height,
-						"err", err,
-					)
-					continue
-				}
-				tb.nodeListNotifier.Broadcast(nl)
 			} else if bytes.Equal(pair.GetKey(), app.KeyNodeRegistered) {
 				var n node.Node
 				if err := cbor.Unmarshal(pair.GetValue(), &n); err != nil {
@@ -276,25 +257,6 @@ func (tb *tendermintBackend) onABCIEvents(ctx context.Context, events []abcitype
 			}
 		}
 	}
-}
-
-func (tb *tendermintBackend) getNodeList(ctx context.Context, height int64) (*api.NodeList, error) {
-	// Generate the nodelist.
-	q, err := tb.querier.QueryAt(ctx, height)
-	if err != nil {
-		return nil, err
-	}
-
-	nodes, err := q.Nodes(ctx)
-	if err != nil {
-		return nil, errors.Wrap(err, "registry: failed to query nodes")
-	}
-
-	api.SortNodeList(nodes)
-
-	return &api.NodeList{
-		Nodes: nodes,
-	}, nil
 }
 
 // New constructs a new tendermint backed registry Backend instance.

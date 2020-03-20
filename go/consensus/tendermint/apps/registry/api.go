@@ -46,10 +46,6 @@ var (
 	// KeyNodeUnfrozen is the ABCI event attribute for when nodes
 	// become unfrozen (value is CBOR serialized node ID).
 	KeyNodeUnfrozen = []byte("nodes.unfrozen")
-
-	// KeyRegistryNodeListEpoch is the ABCI event attribute for
-	// registry epochs.
-	KeyRegistryNodeListEpoch = []byte("nodes.epoch")
 )
 
 // EntityDeregistration is an entity deregistration.

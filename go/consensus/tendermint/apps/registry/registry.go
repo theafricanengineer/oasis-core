@@ -12,7 +12,6 @@ import (
 	"github.com/oasislabs/oasis-core/go/common/node"
 	"github.com/oasislabs/oasis-core/go/consensus/api/transaction"
 	"github.com/oasislabs/oasis-core/go/consensus/tendermint/abci"
-	"github.com/oasislabs/oasis-core/go/consensus/tendermint/api"
 	registryState "github.com/oasislabs/oasis-core/go/consensus/tendermint/apps/registry/state"
 	stakingapp "github.com/oasislabs/oasis-core/go/consensus/tendermint/apps/staking"
 	stakingState "github.com/oasislabs/oasis-core/go/consensus/tendermint/apps/staking/state"
@@ -153,7 +152,6 @@ func (app *registryApplication) onRegistryEpochChanged(ctx *abci.Context, regist
 	// period and then removed. This is required so that expired nodes
 	// can still get slashed while inside the debonding interval as
 	// otherwise the nodes could not be resolved.
-	var expiredNodes []*node.Node
 	for _, node := range nodes {
 		if !node.IsExpired(uint64(registryEpoch)) {
 			continue
@@ -169,7 +167,6 @@ func (app *registryApplication) onRegistryEpochChanged(ctx *abci.Context, regist
 		}
 
 		if !status.ExpirationProcessed {
-			expiredNodes = append(expiredNodes, node)
 			status.ExpirationProcessed = true
 			if err = state.SetNodeStatus(node.ID, status); err != nil {
 				return fmt.Errorf("registry: onRegistryEpochChanged: couldn't set node status: %w", err)
@@ -195,19 +192,6 @@ func (app *registryApplication) onRegistryEpochChanged(ctx *abci.Context, regist
 			}
 		}
 	}
-
-	// Emit the RegistryNodeListEpoch notification event.
-	evb := api.NewEventBuilder(app.Name())
-	// (Dummy value, should be ignored.)
-	evb = evb.Attribute(KeyRegistryNodeListEpoch, []byte("1"))
-
-	if len(expiredNodes) > 0 {
-		// Iff any nodes have expired, force-emit the NodesExpired event
-		// so the change is picked up.
-		evb = evb.Attribute(KeyNodesExpired, cbor.Marshal(expiredNodes))
-	}
-
-	ctx.EmitEvent(evb)
 
 	return nil
 }

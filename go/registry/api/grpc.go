@@ -36,8 +36,6 @@ var (
 	methodWatchEntities = serviceName.NewMethod("WatchEntities", nil)
 	// methodWatchNodes is the WatchNodes method.
 	methodWatchNodes = serviceName.NewMethod("WatchNodes", nil)
-	// methodWatchNodeList is the WatchNodeList method.
-	methodWatchNodeList = serviceName.NewMethod("WatchNodeList", nil)
 	// methodWatchRuntimes is the WatchRuntimes method.
 	methodWatchRuntimes = serviceName.NewMethod("WatchRuntimes", nil)
 
@@ -88,11 +86,6 @@ var (
 			{
 				StreamName:    methodWatchNodes.ShortName(),
 				Handler:       handlerWatchNodes,
-				ServerStreams: true,
-			},
-			{
-				StreamName:    methodWatchNodeList.ShortName(),
-				Handler:       handlerWatchNodeList,
 				ServerStreams: true,
 			},
 			{
@@ -344,34 +337,6 @@ func handlerWatchNodes(srv interface{}, stream grpc.ServerStream) error {
 	}
 }
 
-func handlerWatchNodeList(srv interface{}, stream grpc.ServerStream) error {
-	if err := stream.RecvMsg(nil); err != nil {
-		return err
-	}
-
-	ctx := stream.Context()
-	ch, sub, err := srv.(Backend).WatchNodeList(ctx)
-	if err != nil {
-		return err
-	}
-	defer sub.Close()
-
-	for {
-		select {
-		case ev, ok := <-ch:
-			if !ok {
-				return nil
-			}
-
-			if err := stream.SendMsg(ev); err != nil {
-				return err
-			}
-		case <-ctx.Done():
-			return ctx.Err()
-		}
-	}
-}
-
 func handlerWatchRuntimes(srv interface{}, stream grpc.ServerStream) error {
 	if err := stream.RecvMsg(nil); err != nil {
 		return err
@@ -504,41 +469,6 @@ func (c *registryClient) WatchNodes(ctx context.Context) (<-chan *NodeEvent, pub
 
 		for {
 			var ev NodeEvent
-			if serr := stream.RecvMsg(&ev); serr != nil {
-				return
-			}
-
-			select {
-			case ch <- &ev:
-			case <-ctx.Done():
-				return
-			}
-		}
-	}()
-
-	return ch, sub, nil
-}
-
-func (c *registryClient) WatchNodeList(ctx context.Context) (<-chan *NodeList, pubsub.ClosableSubscription, error) {
-	ctx, sub := pubsub.NewContextSubscription(ctx)
-
-	stream, err := c.conn.NewStream(ctx, &serviceDesc.Streams[2], methodWatchNodeList.FullName())
-	if err != nil {
-		return nil, nil, err
-	}
-	if err = stream.SendMsg(nil); err != nil {
-		return nil, nil, err
-	}
-	if err = stream.CloseSend(); err != nil {
-		return nil, nil, err
-	}
-
-	ch := make(chan *NodeList)
-	go func() {
-		defer close(ch)
-
-		for {
-			var ev NodeList
 			if serr := stream.RecvMsg(&ev); serr != nil {
 				return
 			}
