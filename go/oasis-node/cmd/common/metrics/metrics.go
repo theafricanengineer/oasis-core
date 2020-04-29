@@ -29,7 +29,8 @@ const (
 	CfgMetricsJobName  = "metrics.job_name"
 	CfgMetricsInterval = "metrics.interval"
 
-	MetricUp = "oasis_up"
+	MetricUp     = "oasis_up" // godoc: metric
+	MetricUpHelp = "Is oasis-test-runner active for specific test."
 
 	MetricsJobTestRunner = "oasis-test-runner"
 
@@ -51,7 +52,7 @@ var (
 	UpGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricUp,
-			Help: "Is oasis-test-runner or oasis-node active",
+			Help: MetricUpHelp,
 		},
 	)
 )

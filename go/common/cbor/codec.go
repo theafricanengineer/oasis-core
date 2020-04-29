@@ -10,7 +10,12 @@ import (
 )
 
 // Maximum message size.
-const maxMessageSize = 104857600 // 100MB
+const (
+	maxMessageSize = 104857600 // 100MB
+
+	MetricCodecSize     = "oasis_codec_size" // godoc: metric
+	MetricCodecSizeHelp = "CBOR codec message size (bytes)."
+)
 
 var (
 	errMessageTooLarge  = errors.New("codec: message too large")
@@ -18,8 +23,8 @@ var (
 
 	codecValueSize = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_codec_size",
-			Help: "CBOR codec message size",
+			Name: MetricCodecSize,
+			Help: MetricCodecSizeHelp,
 		},
 		[]string{"call"},
 	)

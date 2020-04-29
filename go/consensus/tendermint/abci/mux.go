@@ -42,13 +42,16 @@ const (
 
 	// debugTxLifetime is the transaction mempool lifetime when CheckTx is disabled (debug only).
 	debugTxLifetime = 1 * time.Minute
+
+	MetricAbciDbSize     = "oasis_abci_db_size" // godoc: metric
+	MetricAbciDbSizeHelp = "Total size of the ABCI database (MiB)."
 )
 
 var (
 	abciSize = prometheus.NewGauge(
 		prometheus.GaugeOpts{
-			Name: "oasis_abci_db_size",
-			Help: "Total size of the ABCI database (MiB)",
+			Name: MetricAbciDbSize,
+			Help: MetricAbciDbSizeHelp,
 		},
 	)
 	abciCollectors = []prometheus.Collector{

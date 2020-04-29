@@ -13,30 +13,33 @@ import (
 )
 
 const (
-	MetricDiskUsageBytes   = "oasis_node_disk_usage_bytes"
-	MetricDiskReadBytes    = "oasis_node_disk_read_bytes"
-	MetricDiskWrittenBytes = "oasis_node_disk_written_bytes"
+	MetricDiskUsageBytes       = "oasis_node_disk_usage_bytes" // godoc: metric
+	MetricDiskUsageBytesHelp   = "Size of datadir of the worker (bytes)."
+	MetricDiskReadBytes        = "oasis_node_disk_read_bytes" // godoc: metric
+	MetricDiskReadBytesHelp    = "Read data from block storage by the worker as reported by /proc/<PID>/io (bytes)."
+	MetricDiskWrittenBytes     = "oasis_node_disk_written_bytes" // godoc: metric
+	MetricDiskWrittenBytesHelp = "Written data from block storage by the worker as reported by /proc/<PID>/io (bytes)"
 )
 
 var (
 	diskUsageGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricDiskUsageBytes,
-			Help: "Size of datadir of the worker",
+			Help: MetricDiskUsageBytesHelp,
 		},
 	)
 
 	diskIOReadBytesGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricDiskReadBytes,
-			Help: "Read bytes by the worker",
+			Help: MetricDiskReadBytesHelp,
 		},
 	)
 
 	diskIOWrittenBytesGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricDiskWrittenBytes,
-			Help: "Written bytes by the worker",
+			Help: MetricDiskWrittenBytesHelp,
 		},
 	)
 

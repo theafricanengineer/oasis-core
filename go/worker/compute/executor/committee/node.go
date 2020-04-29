@@ -35,6 +35,23 @@ import (
 	"github.com/oasislabs/oasis-core/go/worker/registration"
 )
 
+const (
+	MetricWorkerExecutionDiscrepancyDetectedCount     = "oasis_worker_execution_discrepancy_detected_count" // godoc: metric
+	MetricWorkerExecutionDiscrepancyDetectedCountHelp = "Number of detected execute discrepancies."
+	MetricWorkerAbortedBatchCount                     = "oasis_worker_aborted_batch_count" // godoc: metric
+	MetricWorkerAbortedBatchCountHelp                 = "Number of aborted batches."
+	MetricWorkerStorageCommitLatency                  = "oasis_worker_storage_commit_latency" // godoc: metric
+	MetricWorkerStorageCommitLatencyHelp              = "Latency of storage commit calls (state + outputs) (seconds)."
+	MetricWorkerBatchReadTime                         = "oasis_worker_batch_read_time" // godoc: metric
+	MetricWorkerBatchReadTimeHelp                     = "Time it takes to read a batch from storage (seconds)."
+	MetricWorkerBatchProcessingTime                   = "oasis_worker_batch_processing_time" // godoc: metric
+	MetricWorkerBatchProcessingTimeHelp               = "Time it takes for a batch to finalize (seconds)."
+	MetricWorkerBatchRuntimeProcessingTime            = "oasis_worker_batch_runtime_processing_time" // godoc: metric
+	MetricWorkerBatchRuntimeProcessingTimeHelp        = "Time it takes for a batch to be processed by the runtime (seconds)."
+	MetricWorkerBatchSize                             = "oasis_worker_batch_size" // godoc: metric
+	MetricWorkerBatchSizeHelp                         = "Number of transactions in a batch."
+)
+
 var (
 	errSeenNewerBlock     = errors.New("executor: seen newer block")
 	errWorkerAborted      = errors.New("executor: worker aborted batch processing")
@@ -49,57 +66,50 @@ var (
 var (
 	discrepancyDetectedCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_execution_discrepancy_detected_count",
-			Help: "Number of detected execute discrepancies",
+			Name: MetricWorkerExecutionDiscrepancyDetectedCount,
+			Help: MetricWorkerExecutionDiscrepancyDetectedCountHelp,
 		},
 		[]string{"runtime"},
 	)
 	abortedBatchCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_aborted_batch_count",
-			Help: "Number of aborted batches",
+			Name: MetricWorkerAbortedBatchCount,
+			Help: MetricWorkerAbortedBatchCountHelp,
 		},
 		[]string{"runtime"},
 	)
 	storageCommitLatency = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_worker_storage_commit_latency",
-			Help: "Latency of storage commit calls (state + outputs)",
+			Name: MetricWorkerStorageCommitLatency,
+			Help: MetricWorkerStorageCommitLatencyHelp,
 		},
 		[]string{"runtime"},
 	)
 	batchReadTime = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_worker_batch_read_time",
-			Help: "Time it takes to read a batch from storage",
+			Name: MetricWorkerBatchReadTime,
+			Help: MetricWorkerBatchReadTimeHelp,
 		},
 		[]string{"runtime"},
 	)
 	batchProcessingTime = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_worker_batch_processing_time",
-			Help: "Time it takes for a batch to finalize",
+			Name: MetricWorkerBatchProcessingTime,
+			Help: MetricWorkerBatchProcessingTimeHelp,
 		},
 		[]string{"runtime"},
 	)
 	batchRuntimeProcessingTime = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_worker_batch_runtime_processing_time",
-			Help: "Time it takes for a batch to be processed by the runtime",
+			Name: MetricWorkerBatchRuntimeProcessingTime,
+			Help: MetricWorkerBatchRuntimeProcessingTimeHelp,
 		},
 		[]string{"runtime"},
 	)
 	batchSize = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_worker_batch_size",
-			Help: "Number of transactions is a batch",
-		},
-		[]string{"runtime"},
-	)
-	roothashCommitLatency = prometheus.NewSummaryVec(
-		prometheus.SummaryOpts{
-			Name: "oasis_worker_roothash_commit_latency",
-			Help: "Latency of roothash commit",
+			Name: MetricWorkerBatchSize,
+			Help: MetricWorkerBatchSizeHelp,
 		},
 		[]string{"runtime"},
 	)
@@ -111,7 +121,6 @@ var (
 		batchProcessingTime,
 		batchRuntimeProcessingTime,
 		batchSize,
-		roothashCommitLatency,
 	}
 
 	metricsOnce sync.Once

@@ -11,17 +11,24 @@ import (
 	"github.com/oasislabs/oasis-core/go/roothash/api"
 )
 
+const (
+	MetricFinalizedRounds           = "oasis_finalized_rounds" // godoc: metric
+	MetricFinalizedRoundsHelp       = "Number of finalized rounds."
+	MetricRoothashBlockInterval     = "oasis_roothash_block_interval" // godoc: metric
+	MetricRoothashBlockIntervalHelp = "Time between roothash blocks (seconds)."
+)
+
 var (
 	rootHashFinalizedRounds = prometheus.NewCounter(
 		prometheus.CounterOpts{
-			Name: "oasis_finalized_rounds",
-			Help: "Number of finalized rounds",
+			Name: MetricFinalizedRounds,
+			Help: MetricFinalizedRoundsHelp,
 		},
 	)
 	rootHashBlockInterval = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_roothash_block_interval",
-			Help: "Time between roothash blocks",
+			Name: MetricRoothashBlockInterval,
+			Help: MetricRoothashBlockIntervalHelp,
 		},
 		[]string{"runtime"},
 	)
