@@ -29,6 +29,17 @@ import (
 	"github.com/oasislabs/oasis-core/go/worker/registration"
 )
 
+const (
+	MetricWorkerMergeDiscrepancyDetectedCount     = "oasis_worker_merge_discrepancy_detected_count" // godoc: metric
+	MetricWorkerMergeDiscrepancyDetectedCountHelp = "Number of detected merge discrepancies."
+	MetricWorkerRoothashMergeCommitLatency        = "oasis_worker_roothash_merge_commit_latency" // godoc: metric
+	MetricWorkerRoothashMergeCommitLatencyHelp    = "Latency of roothash merge commit (seconds)."
+	MetricWorkerAbortedMergeCount                 = "oasis_worker_aborted_merge_count" // godoc: metric
+	MetricWorkerAbortedMergeCountHelp             = "Number of aborted merges."
+	MetricWorkerInconsistentMergeRootCount        = "oasis_worker_inconsistent_merge_root_count" // godoc: metric
+	MetricWorkerInconsistentMergeRootCountHelp    = "Number of inconsistent merge roots."
+)
+
 var (
 	errIncorrectState = errors.New("merge: incorrect state")
 	errSeenNewerBlock = errors.New("merge: seen newer block")
@@ -38,29 +49,29 @@ var (
 var (
 	discrepancyDetectedCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_merge_discrepancy_detected_count",
-			Help: "Number of detected merge discrepancies",
+			Name: MetricWorkerMergeDiscrepancyDetectedCount,
+			Help: MetricWorkerMergeDiscrepancyDetectedCountHelp,
 		},
 		[]string{"runtime"},
 	)
 	roothashCommitLatency = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_worker_roothash_merge_commit_latency",
-			Help: "Latency of roothash merge commit",
+			Name: MetricWorkerRoothashMergeCommitLatency,
+			Help: MetricWorkerRoothashMergeCommitLatencyHelp,
 		},
 		[]string{"runtime"},
 	)
 	abortedMergeCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_aborted_merge_count",
-			Help: "Number of aborted merges",
+			Name: MetricWorkerAbortedMergeCount,
+			Help: MetricWorkerAbortedMergeCountHelp,
 		},
 		[]string{"runtime"},
 	)
 	inconsistentMergeRootCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_inconsistent_merge_root_count",
-			Help: "Number of inconsistent merge roots",
+			Name: MetricWorkerInconsistentMergeRootCount,
+			Help: MetricWorkerInconsistentMergeRootCountHelp,
 		},
 		[]string{"runtime"},
 	)

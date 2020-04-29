@@ -34,6 +34,13 @@ const (
 
 	maxRecvMsgSize = 104857600 // 100 MiB
 	maxSendMsgSize = 104857600 // 100 MiB
+
+	MetricGrpcCalls            = "oasis_grpc_calls" // godoc: metric
+	MetricGrpcCallsHelp        = "Number of gRPC calls."
+	MetricGrpcLatency          = "oasis_grpc_latency" // godoc: metric
+	MetricGrpcLatencyHelp      = "gRPC call latency (seconds)."
+	MetricGrpcStreamWrites     = "oasis_grpc_stream_writes" // godoc: metric
+	MetricGrpcStreamWritesHelp = "Number of gRPC stream writes."
 )
 
 var (
@@ -45,22 +52,22 @@ var (
 
 	grpcCalls = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_grpc_calls",
-			Help: "Number of gRPC calls.",
+			Name: MetricGrpcCalls,
+			Help: MetricGrpcCallsHelp,
 		},
 		[]string{"call"},
 	)
 	grpcLatency = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_grpc_latency",
-			Help: "gRPC call latency.",
+			Name: MetricGrpcLatency,
+			Help: MetricGrpcLatencyHelp,
 		},
 		[]string{"call"},
 	)
 	grpcStreamWrites = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_grpc_stream_writes",
-			Help: "Number of gRPC stream writes",
+			Name: MetricGrpcStreamWrites,
+			Help: MetricGrpcStreamWritesHelp,
 		},
 		[]string{"call"},
 	)

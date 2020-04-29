@@ -36,6 +36,11 @@ import (
 	"github.com/oasislabs/oasis-core/go/worker/registration"
 )
 
+const (
+	MetricWorkerTxnschedulerIncomingQueueSize     = "oasis_worker_txnscheduler_incoming_queue_size" // godoc: metric
+	MetricWorkerTxnschedulerIncomingQueueSizeHelp = "Size of the incoming queue (number of entries)."
+)
+
 var (
 	errIncorrectState = errors.New("incorrect state")
 	errNoBlocks       = errors.New("no blocks")
@@ -44,8 +49,8 @@ var (
 var (
 	incomingQueueSize = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "oasis_worker_txnscheduler_incoming_queue_size",
-			Help: "Size of the incoming queue (number of entries)",
+			Name: MetricWorkerTxnschedulerIncomingQueueSize,
+			Help: MetricWorkerTxnschedulerIncomingQueueSizeHelp,
 		},
 		[]string{"runtime"},
 	)

@@ -10,31 +10,34 @@ import (
 )
 
 const (
-	MetricMemVmSizeBytes   = "oasis_node_mem_vm_size_bytes" // nolint: golint
-	MetricMemRssAnonBytes  = "oasis_node_mem_rss_anon_bytes"
-	MetricMemRssFileBytes  = "oasis_node_mem_rss_file_bytes"
-	MetricMemRssShmemBytes = "oasis_node_mem_rss_shmem_bytes"
+	MetricMemVmSizeBytes      = "oasis_node_mem_vm_size_bytes"           // nolint: golint // godoc: metric
+	MetricMemVmSizeBytesHelp  = "Virtual memory size of worker (bytes)." // nolint: golint
+	MetricMemRssAnonBytes     = "oasis_node_mem_rss_anon_bytes"          // godoc: metric
+	MetricMemRssAnonBytesHelp = "Size of resident anonymous memory of worker as reported by /proc/<PID>/status (bytes)."
+	MetricMemRssFileBytes     = "oasis_node_mem_rss_file_bytes" // godoc: metric
+	MetricMemRssFileBytesHelp = "Size of resident file mappings of worker as reported by /proc/<PID>/status (bytes)"
+	MetricMemRssShmemBytes    = "oasis_node_mem_rss_shmem_bytes"
 )
 
 var (
 	vmSizeGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricMemVmSizeBytes,
-			Help: "Virtual memory size of worker",
+			Help: MetricMemVmSizeBytesHelp,
 		},
 	)
 
 	rssAnonGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricMemRssAnonBytes,
-			Help: "Size of resident anonymous memory of worker",
+			Help: MetricMemRssAnonBytesHelp,
 		},
 	)
 
 	rssFileGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricMemRssFileBytes,
-			Help: "Size of resident file mappings of worker",
+			Help: MetricMemRssFileBytesHelp,
 		},
 	)
 

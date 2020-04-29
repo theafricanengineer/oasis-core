@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	MetricCPUUTimeSeconds = "oasis_node_cpu_utime_seconds"
-	MetricCPUSTimeSeconds = "oasis_node_cpu_stime_seconds"
+	MetricCPUUTimeSeconds     = "oasis_node_cpu_utime_seconds" // godoc: metric
+	MetricCPUUTimeSecondsHelp = "CPU user time spent by worker as reported by /proc/<PID>/stat (seconds)."
+	MetricCPUSTimeSeconds     = "oasis_node_cpu_stime_seconds" // godoc: metric
+	MetricCPUSTimeSecondsHelp = "CPU system time spent by worker as reported by /proc/<PID>/stat (seconds)."
 
 	// getconf CLK_TCK
 	ClockTicks = 100
@@ -21,14 +23,14 @@ var (
 	utimeGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricCPUUTimeSeconds,
-			Help: "CPU user time spent by worker",
+			Help: MetricCPUUTimeSecondsHelp,
 		},
 	)
 
 	stimeGauge = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: MetricCPUSTimeSeconds,
-			Help: "CPU system time spent by worker",
+			Help: MetricCPUSTimeSecondsHelp,
 		},
 	)
 

@@ -12,32 +12,43 @@ import (
 	"github.com/oasislabs/oasis-core/go/storage/mkvs/checkpoint"
 )
 
+const (
+	MetricStorageFailures      = "oasis_storage_failures" // godoc: metric
+	MetricStorageFailuresHelp  = "Number of storage failures."
+	MetricStorageSuccesses     = "oasis_storage_successes" // godoc: metric
+	MetricStorageSuccessesHelp = "Number of storage successes."
+	MetricStorageLatency       = "oasis_storage_latency" // godoc: metric
+	MetricStorageLatencyHelp   = "Storage call latency (seconds)."
+	MetricStorageValueSize     = "oasis_storage_value_size" // godoc: metric
+	MetricStorageValueSizeHelp = "Storage call value size (bytes)."
+)
+
 var (
 	storageFailures = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_storage_failures",
-			Help: "Number of storage failures.",
+			Name: MetricStorageFailures,
+			Help: MetricStorageFailuresHelp,
 		},
 		[]string{"call"},
 	)
 	storageCalls = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_storage_successes",
-			Help: "Number of storage successes.",
+			Name: MetricStorageSuccesses,
+			Help: MetricStorageSuccessesHelp,
 		},
 		[]string{"call"},
 	)
 	storageLatency = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_storage_latency",
-			Help: "Storage call latency",
+			Name: MetricStorageLatency,
+			Help: MetricStorageLatencyHelp,
 		},
 		[]string{"call"},
 	)
 	storageValueSize = prometheus.NewSummaryVec(
 		prometheus.SummaryOpts{
-			Name: "oasis_storage_value_size",
-			Help: "Storage call value size",
+			Name: MetricStorageValueSize,
+			Help: MetricStorageValueSizeHelp,
 		},
 		[]string{"call"},
 	)

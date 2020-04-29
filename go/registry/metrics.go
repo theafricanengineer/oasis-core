@@ -12,25 +12,34 @@ import (
 	"github.com/oasislabs/oasis-core/go/registry/api"
 )
 
-const metricsUpdateInterval = 10 * time.Second
+const (
+	metricsUpdateInterval = 10 * time.Second
+
+	MetricRegistryNodes        = "oasis_registry_nodes" // godoc: metric
+	MetricRegistryNodesHelp    = "Number of registry nodes."
+	MetricRegistryEntities     = "oasis_registry_entities" // godoc: metric
+	MetricRegistryEntitiesHelp = "Number of registry entities."
+	MetricRegistryRuntimes     = "oasis_registry_runtimes" // godoc: metric
+	MetricRegistryRuntimesHelp = "Number of registry runtimes."
+)
 
 var (
 	registryNodes = prometheus.NewGauge(
 		prometheus.GaugeOpts{
-			Name: "oasis_registry_nodes",
-			Help: "Number of registry nodes.",
+			Name: MetricRegistryNodes,
+			Help: MetricRegistryNodesHelp,
 		},
 	)
 	registryEntities = prometheus.NewGauge(
 		prometheus.GaugeOpts{
-			Name: "oasis_registry_entities",
-			Help: "Number of registry entities.",
+			Name: MetricRegistryEntities,
+			Help: MetricRegistryEntitiesHelp,
 		},
 	)
 	registryRuntimes = prometheus.NewGauge(
 		prometheus.GaugeOpts{
-			Name: "oasis_registry_runtimes",
-			Help: "Number of registry runtimes.",
+			Name: MetricRegistryRuntimes,
+			Help: MetricRegistryRuntimesHelp,
 		},
 	)
 	registeryCollectors = []prometheus.Collector{

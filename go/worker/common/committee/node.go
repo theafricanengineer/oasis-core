@@ -20,32 +20,43 @@ import (
 	"github.com/oasislabs/oasis-core/go/worker/common/p2p"
 )
 
+const (
+	MetricWorkerProcessedBlockCount      = "oasis_worker_processed_block_count" // godoc: metric
+	MetricWorkerProcessedBlockCountHelp  = "Number of processed roothash blocks."
+	MetricWorkerProcessedEventCount      = "oasis_worker_processed_event_count" // godoc: metric
+	MetricWorkerProcessedEventCountHelp  = "Number of processed roothash events."
+	MetricWorkerFailedRoundCount         = "oasis_worker_failed_round_count" // godoc: metric
+	MetricWorkerFailedRoundCountHelp     = "Number of failed roothash rounds."
+	MetricWorkerEpochTransitionCount     = "oasis_worker_epoch_transition_count" // godoc: metric
+	MetricWorkerEpochTransitionCountHelp = "Number of epoch transitions."
+)
+
 var (
 	processedBlockCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_processed_block_count",
-			Help: "Number of processed roothash blocks",
+			Name: MetricWorkerProcessedBlockCount,
+			Help: MetricWorkerProcessedBlockCountHelp,
 		},
 		[]string{"runtime"},
 	)
 	processedEventCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_processed_event_count",
-			Help: "Number of processed roothash events",
+			Name: MetricWorkerProcessedEventCount,
+			Help: MetricWorkerProcessedEventCountHelp,
 		},
 		[]string{"runtime"},
 	)
 	failedRoundCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_failed_round_count",
-			Help: "Number of failed roothash rounds",
+			Name: MetricWorkerFailedRoundCount,
+			Help: MetricWorkerFailedRoundCountHelp,
 		},
 		[]string{"runtime"},
 	)
 	epochTransitionCount = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "oasis_worker_epoch_transition_count",
-			Help: "Number of epoch transitions",
+			Name: MetricWorkerEpochTransitionCount,
+			Help: MetricWorkerEpochTransitionCountHelp,
 		},
 		[]string{"runtime"},
 	)
