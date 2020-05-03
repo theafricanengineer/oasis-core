@@ -58,10 +58,7 @@ func MakeDoubleSignEvidence(t *testing.T, ident *identity.Identity) consensus.Ev
 		},
 	}
 	now := time.Now()
-	pk, err := pv1.GetPubKey()
-	require.NoError(err, "GetPubKey")
 	ev := &tmtypes.DuplicateVoteEvidence{
-		PubKey: pk,
 		// NOTE: ChainID must match the unit test genesis block.
 		VoteA: makeVote(pv1, genesisTestHelpers.TestChainID, 0, 1, 2, 1, blockID1, now),
 		VoteB: makeVote(pv2, genesisTestHelpers.TestChainID, 0, 1, 2, 1, blockID2, now),

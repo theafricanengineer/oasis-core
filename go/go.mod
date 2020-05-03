@@ -1,7 +1,7 @@
 module github.com/oasislabs/oasis-core/go
 
 replace (
-	github.com/tendermint/tendermint => github.com/oasislabs/tendermint v0.33.4-oasis1
+	github.com/tendermint/tendermint => github.com/oasislabs/tendermint v0.32.0-dev2.0.20200430124658-ebbd5250a562
 	golang.org/x/crypto/curve25519 => github.com/oasislabs/ed25519/extra/x25519 v0.0.0-20191022155220-a426dcc8ad5f
 	golang.org/x/crypto/ed25519 => github.com/oasislabs/ed25519 v0.0.0-20191109133925-b197a691e30d
 )
@@ -42,9 +42,9 @@ require (
 	github.com/opentracing/opentracing-go v1.1.0
 	github.com/pelletier/go-toml v1.7.0 // indirect
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.5.1
+	github.com/prometheus/client_golang v1.6.0
 	github.com/prometheus/common v0.9.1
-	github.com/prometheus/procfs v0.0.8
+	github.com/prometheus/procfs v0.0.11
 	github.com/remyoudompheng/bigfft v0.0.0-20190512091148-babf20351dd7 // indirect
 	github.com/seccomp/libseccomp-golang v0.9.1
 	github.com/smartystreets/assertions v1.0.0 // indirect
@@ -67,9 +67,8 @@ require (
 	gitlab.com/yawning/dynlib.git v0.0.0-20190911075527-1e6ab3739fd8
 	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
-	golang.org/x/sys v0.0.0-20200413165638-669c56c373c4 // indirect
 	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55
-	google.golang.org/grpc v1.28.1
+	google.golang.org/grpc v1.29.1
 	google.golang.org/grpc/security/advancedtls v0.0.0-20200406221258-98e4c7ad3eef
 	google.golang.org/protobuf v1.21.0
 	gopkg.in/ini.v1 v1.55.0 // indirect
