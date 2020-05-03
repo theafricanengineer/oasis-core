@@ -124,6 +124,8 @@ func RegisterScenarios() error {
 		Debond,
 		// Late start test.
 		LateStart,
+		// Consensus state sync.
+		ConsensusStateSync,
 	} {
 		if err := cmd.Register(s); err != nil {
 			return err

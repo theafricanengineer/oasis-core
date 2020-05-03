@@ -24,6 +24,7 @@ import (
 	storage "github.com/oasislabs/oasis-core/go/storage/api"
 	storageDB "github.com/oasislabs/oasis-core/go/storage/database"
 	"github.com/oasislabs/oasis-core/go/storage/mkvs"
+	"github.com/oasislabs/oasis-core/go/storage/mkvs/checkpoint"
 )
 
 var _ api.ApplicationState = (*applicationState)(nil)
@@ -45,6 +46,8 @@ type applicationState struct { // nolint: maligned
 	statePruner    StatePruner
 	prunerClosedCh chan struct{}
 	prunerNotifyCh *channels.RingChannel
+
+	checkpointer checkpoint.Checkpointer
 
 	blockLock   sync.RWMutex
 	blockTime   time.Time
@@ -238,6 +241,24 @@ func (s *applicationState) doInitChain(now time.Time) error {
 	return s.doCommitOrInitChainLocked(now)
 }
 
+func (s *applicationState) doApplyStateSync(root storage.Root) error {
+	s.blockLock.Lock()
+	defer s.blockLock.Unlock()
+
+	s.stateRoot = root
+
+	s.deliverTxTree.Close()
+	s.deliverTxTree = mkvs.NewWithRoot(nil, s.storage.NodeDB(), root, mkvs.WithoutWriteLog())
+	s.checkTxTree.Close()
+	s.checkTxTree = mkvs.NewWithRoot(nil, s.storage.NodeDB(), root, mkvs.WithoutWriteLog())
+
+	if err := s.doCommitOrInitChainLocked(time.Time{}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *applicationState) doCommit(now time.Time) (uint64, error) {
 	s.blockLock.Lock()
 	defer s.blockLock.Unlock()
@@ -262,10 +283,12 @@ func (s *applicationState) doCommit(now time.Time) (uint64, error) {
 	s.checkTxTree.Close()
 	s.checkTxTree = mkvs.NewWithRoot(nil, s.storage.NodeDB(), s.stateRoot, mkvs.WithoutWriteLog())
 
-	// Notify pruner of a new block.
+	// Notify pruner and checkpointer of a new block.
 	s.prunerNotifyCh.In() <- s.stateRoot.Version
 	// Discover the version below which all versions can be discarded from block history.
 	lastRetainedVersion := s.statePruner.GetLastRetainedVersion()
+	// Notify the checkpointer of the new version.
+	s.checkpointer.NotifyNewVersion(s.stateRoot.Version)
 
 	return lastRetainedVersion, nil
 }
@@ -430,6 +453,21 @@ func newApplicationState(ctx context.Context, cfg *ApplicationConfig) (*applicat
 		return nil, fmt.Errorf("state: failed to create pruner: %w", err)
 	}
 
+	// Initialize the checkpointer.
+	checkpointerCfg := checkpoint.CheckpointerConfig{
+		CheckInterval:   1 * time.Minute, // XXX: Make this configurable.
+		RootsPerVersion: 1,
+		Parameters: &checkpoint.CreationParameters{ // XXX: Make these configurable.
+			Interval:  10,
+			NumKept:   1,
+			ChunkSize: 1024 * 1024,
+		},
+	}
+	checkpointer, err := checkpoint.NewCheckpointer(ctx, ndb, ldb.Checkpointer(), checkpointerCfg)
+	if err != nil {
+		return nil, fmt.Errorf("state: failed to create checkpointer: %w", err)
+	}
+
 	var minGasPrice quantity.Quantity
 	if err = minGasPrice.FromInt64(int64(cfg.MinGasPrice)); err != nil {
 		return nil, fmt.Errorf("state: invalid minimum gas price: %w", err)
@@ -445,6 +483,7 @@ func newApplicationState(ctx context.Context, cfg *ApplicationConfig) (*applicat
 		checkTxTree:     checkTxTree,
 		stateRoot:       stateRoot,
 		storage:         ldb,
+		checkpointer:    checkpointer,
 		statePruner:     statePruner,
 		prunerClosedCh:  make(chan struct{}),
 		prunerNotifyCh:  channels.NewRingChannel(1),

@@ -18,12 +18,14 @@ import (
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmlog "github.com/tendermint/tendermint/libs/log"
 	tmpubsub "github.com/tendermint/tendermint/libs/pubsub"
+	tmlite "github.com/tendermint/tendermint/lite2"
 	tmmempool "github.com/tendermint/tendermint/mempool"
 	tmnode "github.com/tendermint/tendermint/node"
 	tmp2p "github.com/tendermint/tendermint/p2p"
 	tmproxy "github.com/tendermint/tendermint/proxy"
 	tmcli "github.com/tendermint/tendermint/rpc/client/local"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
+	tmstatesync "github.com/tendermint/tendermint/statesync"
 	tmtypes "github.com/tendermint/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
 
@@ -124,6 +126,18 @@ const (
 	CfgConsensusSubmissionMaxFee = "consensus.tendermint.submission.max_fee"
 	// CfgConsensusDebugDisableCheckTx disables CheckTx.
 	CfgConsensusDebugDisableCheckTx = "consensus.tendermint.debug.disable_check_tx"
+
+	// CfgConsensusStateSyncEnabled enabled consensus state sync.
+	CfgConsensusStateSyncEnabled = "consensus.tendermint.state_sync.enabled"
+	// CfgConsensusStateSyncConsensusNode specifies nodes exposing public consensus services which
+	// are used to sync a light client.
+	CfgConsensusStateSyncConsensusNode = "consensus.tendermint.state_sync.consensus_node"
+	// CfgConsensusStateSyncTrustPeriod is the light client trust period.
+	CfgConsensusStateSyncTrustPeriod = "consensus.tendermint.state_sync.trust_period"
+	// CfgConsensusStateSyncTrustHeight is the known trusted height for the light client.
+	CfgConsensusStateSyncTrustHeight = "consensus.tendermint.state_sync.trust_height"
+	// CfgConsensusStateSyncTrustHash is the known trusted block header hash for the light client.
+	CfgConsensusStateSyncTrustHash = "consensus.tendermint.state_sync.trust_hash"
 
 	// StateDir is the name of the directory located inside the node's data
 	// directory which contains the tendermint state.
@@ -1064,6 +1078,33 @@ func (t *tendermintService) lazyInit() error {
 		return db, nil
 	}
 
+	// Configure state sync if enabled.
+	var stateProvider tmstatesync.StateProvider
+	if viper.GetBool(CfgConsensusStateSyncEnabled) {
+		t.Logger.Info("state sync enabled")
+
+		// Enable state sync in the configuration.
+		tenderConfig.StateSync.Enable = true
+		tenderConfig.StateSync.TrustHash = viper.GetString(CfgConsensusStateSyncTrustHash)
+
+		// Create new state sync state provider.
+		cfg := stateProviderConfig{
+			ChainID:        tmGenDoc.ChainID,
+			ConsensusNodes: viper.GetStringSlice(CfgConsensusStateSyncConsensusNode),
+			TrustOptions: tmlite.TrustOptions{
+				Period: viper.GetDuration(CfgConsensusStateSyncTrustPeriod),
+				Height: int64(viper.GetUint64(CfgConsensusStateSyncTrustHeight)),
+				Hash:   tenderConfig.StateSync.TrustHashBytes(),
+			},
+		}
+		if stateProvider, err = newStateProvider(t.ctx, cfg); err != nil {
+			t.Logger.Error("failed to create state sync state provider",
+				"err", err,
+			)
+			return fmt.Errorf("failed to create state sync state provider: %w", err)
+		}
+	}
+
 	// HACK: tmnode.NewNode() triggers block replay and or ABCI chain
 	// initialization, instead of t.node.Start().  This is a problem
 	// because at the time that lazyInit() is called, none of the ABCI
@@ -1080,6 +1121,7 @@ func (t *tendermintService) lazyInit() error {
 			wrapDbProvider,
 			tmnode.DefaultMetricsProvider(tenderConfig.Instrumentation),
 			newLogAdapter(!viper.GetBool(cfgLogDebug)),
+			tmnode.StateProvider(stateProvider),
 		)
 		if err != nil {
 			return fmt.Errorf("tendermint: failed to create node: %w", err)
@@ -1479,6 +1521,13 @@ func init() {
 	Flags.Uint64(CfgConsensusSubmissionMaxFee, 0, "maximum transaction fee when submitting consensus transactions")
 	Flags.Bool(CfgConsensusDebugDisableCheckTx, false, "do not perform CheckTx on incoming transactions (UNSAFE)")
 	Flags.Bool(CfgDebugUnsafeReplayRecoverCorruptedWAL, false, "Enable automatic recovery from corrupted WAL during replay (UNSAFE).")
+
+	// State sync.
+	Flags.Bool(CfgConsensusStateSyncEnabled, false, "enable state sync")
+	Flags.StringSlice(CfgConsensusStateSyncConsensusNode, []string{}, "consensus node to use for syncing the light client")
+	Flags.Duration(CfgConsensusStateSyncTrustPeriod, 24*time.Hour, "light client trust period")
+	Flags.Uint64(CfgConsensusStateSyncTrustHeight, 0, "light client trusted height")
+	Flags.String(CfgConsensusStateSyncTrustHash, "", "light client trusted consensus header hash")
 
 	_ = Flags.MarkHidden(cfgLogDebug)
 	_ = Flags.MarkHidden(CfgDebugP2PAddrBookLenient)

@@ -52,6 +52,13 @@ const (
 	maxNodes = 32 // Arbitrary
 )
 
+// ConsensusStateSyncCfg is a node's consensus state sync configuration.
+type ConsensusStateSyncCfg struct {
+	ConsensusNodes []string
+	TrustHeight    uint64
+	TrustHash      string
+}
+
 // Node defines the common fields for all node types.
 type Node struct { // nolint: maligned
 	sync.Mutex
@@ -74,6 +81,7 @@ type Node struct { // nolint: maligned
 	logWatcherHandlerFactories               []log.WatcherHandlerFactory
 
 	consensus            ConsensusFixture
+	consensusStateSync   *ConsensusStateSyncCfg
 	customGrpcSocketPath string
 }
 
@@ -161,6 +169,14 @@ func (n *Node) handleExit(cmdErr error) error {
 	default:
 		return cmdErr
 	}
+}
+
+// SetConsensusStateSync configures wheteher a node should perform
+func (n *Node) SetConsensusStateSync(cfg *ConsensusStateSyncCfg) {
+	n.Lock()
+	defer n.Unlock()
+
+	n.consensusStateSync = cfg
 }
 
 // NodeCfg defines the common node configuration options.
@@ -652,6 +668,13 @@ func (net *Network) startOasisNode(
 		}
 		extraArgs = extraArgs.debugDontBlameOasis()
 		extraArgs = extraArgs.grpcDebugGrpcInternalSocketPath(node.customGrpcSocketPath)
+	}
+	if node.consensusStateSync != nil {
+		extraArgs = extraArgs.tendermintStateSync(
+			node.consensusStateSync.ConsensusNodes,
+			node.consensusStateSync.TrustHeight,
+			node.consensusStateSync.TrustHash,
+		)
 	}
 	if viper.IsSet(metrics.CfgMetricsAddr) {
 		extraArgs = extraArgs.appendNodeMetrics(node)
