@@ -29,6 +29,8 @@ const (
 	MetricWorkerFailedRoundCountHelp     = "Number of failed roothash rounds."
 	MetricWorkerEpochTransitionCount     = "oasis_worker_epoch_transition_count" // godoc: metric
 	MetricWorkerEpochTransitionCountHelp = "Number of epoch transitions."
+	MetricWorkerEpochNumber              = "oasis_worker_epoch_number" // godoc: metric
+	MetricWorkerEpochNumberHelp          = "Current epoch number as seen by the worker."
 )
 
 var (
@@ -60,11 +62,20 @@ var (
 		},
 		[]string{"runtime"},
 	)
+	epochNumber = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: MetricWorkerEpochNumber,
+			Help: MetricWorkerEpochNumberHelp,
+		},
+		[]string{"runtime"},
+	)
+
 	nodeCollectors = []prometheus.Collector{
 		processedBlockCount,
 		processedEventCount,
 		failedRoundCount,
 		epochTransitionCount,
+		epochNumber,
 	}
 
 	metricsOnce sync.Once
@@ -186,6 +197,7 @@ func (n *Node) handleEpochTransitionLocked(height int64) {
 	}
 
 	epoch := n.Group.GetEpochSnapshot()
+	epochNumber.With(n.getMetricLabels()).Set(float64(epoch.epochNumber))
 	for _, hooks := range n.hooks {
 		hooks.HandleEpochTransitionLocked(epoch)
 	}
