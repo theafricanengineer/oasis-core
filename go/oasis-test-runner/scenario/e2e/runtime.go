@@ -33,6 +33,11 @@ const (
 	cfgRuntimeBinaryDir = "runtime.binary_dir"
 	cfgRuntimeLoader    = "runtime.loader"
 	cfgTEEHardware      = "tee_hardware"
+
+	cfgIasMock     = "ias.mock"
+	cfgIasSpid     = "ias.spid"
+	cfgIasCertFile = "ias.cert_file"
+	cfgIasKeyFile  = "ias.key_file"
 )
 
 var (
@@ -70,6 +75,11 @@ type runtimeImpl struct {
 	runtimeBinaryDir string
 	runtimeLoader    string
 	TEEHardware      string
+
+	iasMock     bool
+	iasSpid     string
+	iasCertFile string
+	iasKeyFile  string
 }
 
 func newRuntimeImpl(name, clientBinary string, clientArgs []string) *runtimeImpl {
@@ -93,6 +103,10 @@ func (sc *runtimeImpl) Clone() scenario.Scenario {
 		runtimeBinaryDir: sc.runtimeBinaryDir,
 		runtimeLoader:    sc.runtimeLoader,
 		TEEHardware:      sc.TEEHardware,
+		iasMock:          sc.iasMock,
+		iasSpid:          sc.iasSpid,
+		iasCertFile:      sc.iasCertFile,
+		iasKeyFile:       sc.iasKeyFile,
 	}
 }
 
@@ -102,6 +116,12 @@ func (sc *runtimeImpl) Parameters() *flag.FlagSet {
 	f.StringVar(&sc.runtimeBinaryDir, cfgRuntimeBinaryDir, sc.runtimeBinaryDir, "path to the runtime binaries directory")
 	f.StringVar(&sc.runtimeLoader, cfgRuntimeLoader, sc.runtimeLoader, "path to the runtime loader")
 	f.StringVar(&sc.TEEHardware, cfgTEEHardware, sc.TEEHardware, "TEE hardware to use")
+
+	// IAS params.
+	f.BoolVar(&sc.iasMock, cfgIasMock, sc.iasMock, "if mock IAS service should be used")
+	f.StringVar(&sc.iasSpid, cfgIasSpid, sc.iasSpid, "IAS service SPID (if non-mock)")
+	f.StringVar(&sc.iasCertFile, cfgIasCertFile, sc.iasCertFile, "IAS service certificate file (if non-mock)")
+	f.StringVar(&sc.iasKeyFile, cfgIasKeyFile, sc.iasKeyFile, "IAS service key file (if non-mock)")
 
 	return f
 }
@@ -139,6 +159,10 @@ func (sc *runtimeImpl) Fixture() (*oasis.NetworkFixture, error) {
 			RuntimeLoaderBinary:               sc.runtimeLoader,
 			DefaultLogWatcherHandlerFactories: DefaultRuntimeLogWatcherHandlerFactories,
 			ConsensusGasCostsTxByte:           1,
+			IASMock:                           sc.iasMock,
+			IASSPID:                           sc.iasSpid,
+			IASCertFile:                       sc.iasCertFile,
+			IASKeyFile:                        sc.iasKeyFile,
 		},
 		Entities: []oasis.EntityCfg{
 			oasis.EntityCfg{IsDebugTestEntity: true},

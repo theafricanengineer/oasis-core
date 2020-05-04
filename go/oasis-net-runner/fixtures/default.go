@@ -53,6 +53,7 @@ func newDefaultFixture() (*oasis.NetworkFixture, error) {
 			ConsensusTimeoutCommit: 1 * time.Second,
 			EpochtimeMock:          viper.GetBool(cfgEpochtimeMock),
 			HaltEpoch:              viper.GetUint64(cfgHaltEpoch),
+			IASMock:                true,
 		},
 		Entities: []oasis.EntityCfg{
 			oasis.EntityCfg{IsDebugTestEntity: true},

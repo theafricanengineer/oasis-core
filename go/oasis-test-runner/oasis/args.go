@@ -400,6 +400,14 @@ func (args *argBuilder) iasSPID(spid []byte) *argBuilder {
 	return args
 }
 
+func (args *argBuilder) iasKeyPair(certFile string, keyFile string) *argBuilder {
+	args.vec = append(args.vec, []string{
+		"--ias.auth.cert", certFile,
+		"--ias.auth.cert.key", keyFile,
+	}...)
+	return args
+}
+
 func (args *argBuilder) addSentries(sentries []*Sentry) *argBuilder {
 	var addrs, certFiles []string
 	for _, sentry := range sentries {
@@ -510,9 +518,11 @@ func (args *argBuilder) appendIASProxy(iasProxy *iasProxy) *argBuilder {
 		args.vec = append(args.vec, []string{
 			"--" + ias.CfgProxyAddress, "127.0.0.1:" + strconv.Itoa(int(iasProxy.grpcPort)),
 			"--" + ias.CfgTLSCertFile, iasProxy.tlsCertPath(),
-			"--" + ias.CfgDebugSkipVerify,
 			"--" + ias.CfgAllowDebugEnclaves,
 		}...)
+		if iasProxy.mock {
+			args.vec = append(args.vec, "--"+ias.CfgDebugSkipVerify)
+		}
 	}
 	return args
 }
