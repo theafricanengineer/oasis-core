@@ -32,14 +32,16 @@ const TimestampFormat = "2006-01-02T15:04:05.999999999"
 
 var (
 	isvQuoteFwdMap = map[string]ISVEnclaveQuoteStatus{
-		"OK":                     QuoteOK,
-		"SIGNATURE_INVALID":      QuoteSignatureInvalid,
-		"GROUP_REVOKED":          QuoteGroupRevoked,
-		"SIGNATURE_REVOKED":      QuoteSignatureRevoked,
-		"KEY_REVOKED":            QuoteKeyRevoked,
-		"SIGRL_VERSION_MISMATCH": QuoteSigRLVersionMismatch,
-		"GROUP_OUT_OF_DATE":      QuoteGroupOutOfDate,
-		"CONFIGURATION_NEEDED":   QuoteConfigurationNeeded,
+		"OK":                                    QuoteOK,
+		"SIGNATURE_INVALID":                     QuoteSignatureInvalid,
+		"GROUP_REVOKED":                         QuoteGroupRevoked,
+		"SIGNATURE_REVOKED":                     QuoteSignatureRevoked,
+		"KEY_REVOKED":                           QuoteKeyRevoked,
+		"SIGRL_VERSION_MISMATCH":                QuoteSigRLVersionMismatch,
+		"GROUP_OUT_OF_DATE":                     QuoteGroupOutOfDate,
+		"CONFIGURATION_NEEDED":                  QuoteConfigurationNeeded,
+		"SW_HARDENING_NEEDED":                   QuoteSwHardeningNeeded,
+		"CONFIGURATION_AND_SW_HARDENING_NEEDED": QuoteConfigurationAndSwHardeningNeeded,
 	}
 	isvQuoteRevMap = make(map[ISVEnclaveQuoteStatus]string)
 
@@ -88,6 +90,8 @@ const (
 	QuoteSigRLVersionMismatch
 	QuoteGroupOutOfDate
 	QuoteConfigurationNeeded
+	QuoteSwHardeningNeeded
+	QuoteConfigurationAndSwHardeningNeeded
 )
 
 // UnmarshalText implements the encoding.TextUnmarshaler interface.
@@ -208,6 +212,9 @@ type AttestationVerificationReport struct {
 	PlatformInfoBlob      string                `json:"platformInfoBlob"`
 	Nonce                 string                `json:"nonce"`
 	EPIDPseudonym         []byte                `json:"epidPseudonym"`
+	// TODO: these were moved from response headers into the report, anything to do with these?
+	AdvisoryURL string   `json:"advisoryURL"`
+	AdvisoryIDs []string `json:"advisoryIDs"`
 }
 
 // Quote decodes and returns the enclave quote component of an Attestation
@@ -231,6 +238,7 @@ func (a *AttestationVerificationReport) validate() error { // nolint: gocyclo
 	}
 
 	// TODO: Enforce version once version 3 test vectors are available.
+	// Enforce to version 4 now?
 
 	if a.ISVEnclaveQuoteStatus == quoteFieldMissing {
 		return fmt.Errorf("ias/avr: missing isvEnclaveQuoteStatus")
@@ -260,7 +268,7 @@ func (a *AttestationVerificationReport) validate() error { // nolint: gocyclo
 
 	if a.PSEManifestStatus != nil {
 		switch a.ISVEnclaveQuoteStatus {
-		case QuoteOK, QuoteGroupOutOfDate, QuoteConfigurationNeeded:
+		case QuoteOK, QuoteGroupOutOfDate, QuoteConfigurationNeeded, QuoteSwHardeningNeeded, QuoteConfigurationAndSwHardeningNeeded:
 		default:
 			return fmt.Errorf("ias/avr: unexpected pseManifestStatus")
 		}
@@ -284,7 +292,7 @@ func (a *AttestationVerificationReport) validate() error { // nolint: gocyclo
 		var canHas bool
 
 		switch a.ISVEnclaveQuoteStatus {
-		case QuoteGroupRevoked, QuoteGroupOutOfDate, QuoteConfigurationNeeded:
+		case QuoteGroupRevoked, QuoteGroupOutOfDate, QuoteConfigurationNeeded, QuoteSwHardeningNeeded, QuoteConfigurationAndSwHardeningNeeded:
 			canHas = true
 		default:
 		}

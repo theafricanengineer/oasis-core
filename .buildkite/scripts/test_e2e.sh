@@ -44,8 +44,7 @@ fi
 # TODO:
 # --e2e/runtime.ias.mock=false
 # --e2e/runtime.ias.spid XXX
-# --e2e/runtime.ias.cert_file "/code/ias-keys/ias.cert"
-# --e2e/runtime.ias.key_file "/code/ias-keys/ias.key"
+# --e2e/runtime.ias.api_key XYZ
 # Run Oasis test runner.
 ${test_runner_binary} \
     ${BUILDKITE:+--basedir ${TEST_BASE_DIR:-$PWD}/e2e} \

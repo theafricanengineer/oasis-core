@@ -252,11 +252,11 @@ type NetworkCfg struct { // nolint: maligned
 	// IASMock specifies if Mock IAS Proxy should be used.
 	IASMock bool `json:"ias_mock,omitempty"`
 
+	// IASSPID is the IAS SPID.
 	IASSPID string `json:"ias_spid,omitempty"`
 
-	IASCertFile string `json:"ias_cert_file,omitempty"`
-
-	IASKeyFile string `json:"ias_key_file,omitempty"`
+	// IASAPIKey is the IAS client API key.
+	IASAPIKey string `json:"ias_api_key,omitempty"`
 
 	// StakingGenesis is the name of a file with a staking genesis document to use if GenesisFile isn't set.
 	StakingGenesis string `json:"staking_genesis"`

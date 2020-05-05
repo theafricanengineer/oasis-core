@@ -16,10 +16,9 @@ var mockSPID []byte
 type iasProxy struct {
 	Node
 
-	spid     string
-	certFile string
-	keyFile  string
-	mock     bool
+	spid   string
+	apiKey string
+	mock   bool
 
 	useRegistry bool
 	grpcPort    uint16
@@ -39,11 +38,10 @@ func (ias *iasProxy) startNode() error {
 
 	switch ias.mock {
 	case true:
-		// Mock.
 		args = args.iasDebugMock().iasSPID(mockSPID)
 	case false:
 		spid, _ := hex.DecodeString(ias.spid)
-		args = args.iasSPID(spid).iasKeyPair(ias.certFile, ias.keyFile)
+		args = args.iasAPIKey(ias.apiKey).iasSPID(spid)
 	}
 
 	switch ias.useRegistry {
@@ -98,8 +96,7 @@ func (net *Network) newIASProxy() (*iasProxy, error) {
 		useRegistry: net.cfg.IASUseRegistry,
 		mock:        net.cfg.IASMock,
 		spid:        net.cfg.IASSPID,
-		certFile:    net.cfg.IASCertFile,
-		keyFile:     net.cfg.IASKeyFile,
+		apiKey:      net.cfg.IASAPIKey,
 		grpcPort:    net.nextNodePort,
 	}
 	net.iasProxy.doStartNode = net.iasProxy.startNode

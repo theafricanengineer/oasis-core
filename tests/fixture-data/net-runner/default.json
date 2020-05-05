@@ -13,6 +13,7 @@
         "epochtime_mock": false,
         "epochtime_tendermint_interval": 0,
         "deterministic_identities": false,
+        "ias_mock": true,
         "staking_genesis": ""
     },
     "entities": [

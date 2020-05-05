@@ -400,10 +400,9 @@ func (args *argBuilder) iasSPID(spid []byte) *argBuilder {
 	return args
 }
 
-func (args *argBuilder) iasKeyPair(certFile string, keyFile string) *argBuilder {
+func (args *argBuilder) iasAPIKey(apiKey string) *argBuilder {
 	args.vec = append(args.vec, []string{
-		"--ias.auth.cert", certFile,
-		"--ias.auth.cert.key", keyFile,
+		"--ias.auth.api_key", apiKey,
 	}...)
 	return args
 }
