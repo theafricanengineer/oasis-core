@@ -684,7 +684,12 @@ func (t *tendermintService) GetBlock(ctx context.Context, height int64) (*consen
 		return nil, err
 	}
 
-	return api.NewBlock(blk), nil
+	vals, err := t.GetTendermintValidators(ctx, height)
+	if err != nil {
+		return nil, err
+	}
+
+	return api.NewBlock(blk, vals), nil
 }
 
 func (t *tendermintService) GetSignerNonce(ctx context.Context, req *consensusAPI.GetSignerNonceRequest) (uint64, error) {
@@ -717,7 +722,7 @@ func (t *tendermintService) WatchBlocks(ctx context.Context) (<-chan *consensusA
 					return
 				}
 
-				mapCh <- api.NewBlock(tmBlk)
+				mapCh <- api.NewBlock(tmBlk, nil)
 			case <-ctx.Done():
 				return
 			}
@@ -829,6 +834,37 @@ func (t *tendermintService) GetTendermintBlock(ctx context.Context, height int64
 		return nil, fmt.Errorf("tendermint: block query failed: %w", err)
 	}
 	return result.Block, nil
+}
+
+func (t *tendermintService) GetTendermintValidators(ctx context.Context, height int64) ([]*tmtypes.Validator, error) {
+	// Make sure that the Tendermint service has started so that we
+	// have the client interface available.
+	select {
+	case <-t.startedCh:
+	case <-t.ctx.Done():
+		return nil, t.ctx.Err()
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+
+	var tmHeight int64
+	if height == consensusAPI.HeightLatest {
+		// Do not let Tendermint determine the latest height (e.g., by passing nil here) as that
+		// completely ignores ABCI processing so it can return a block for which local state does
+		// not yet exist. Use our mux notion of latest height instead.
+		tmHeight = t.mux.BlockHeight()
+		if tmHeight == 0 {
+			// No committed blocks yet.
+			return nil, nil
+		}
+	} else {
+		tmHeight = height
+	}
+	result, err := t.client.Validators(&tmHeight)
+	if err != nil {
+		return nil, fmt.Errorf("tendermint: validators query failed: %w", err)
+	}
+	return result.Validators, nil
 }
 
 func (t *tendermintService) GetHeight(ctx context.Context) (int64, error) {

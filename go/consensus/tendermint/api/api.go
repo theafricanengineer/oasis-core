@@ -137,13 +137,15 @@ type BlockMeta struct {
 	Header *tmtypes.Header `json:"header"`
 	// LastCommit is the Tendermint last commit info.
 	LastCommit *tmtypes.Commit `json:"last_commit"`
+	Validators []*tmtypes.Validator
 }
 
 // NewBlock creates a new consensus.Block from a Tendermint block.
-func NewBlock(blk *tmtypes.Block) *consensus.Block {
+func NewBlock(blk *tmtypes.Block, vals []*tmtypes.Validator) *consensus.Block {
 	meta := BlockMeta{
 		Header:     &blk.Header,
 		LastCommit: blk.LastCommit,
+		Validators: vals,
 	}
 	rawMeta := cbor.Marshal(meta)
 

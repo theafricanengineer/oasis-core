@@ -297,6 +297,8 @@ func getStats(ctx context.Context, consensus consensusAPI.ClientBackend, registr
 			}
 		}
 
+		logger.Debug("%%% vals", "vals", tmBlockMeta.Validators)
+
 		// Add proposer sum (previous proposer).
 		if previousProposerAddr != "" {
 			// Only count round 0 proposals.
