@@ -13,13 +13,13 @@ import (
 )
 
 const (
-	MetricStorageFailures      = "oasis_storage_failures" // godoc: metric
+	MetricStorageFailures      = "oasis_storage_failures"
 	MetricStorageFailuresHelp  = "Number of storage failures."
-	MetricStorageSuccesses     = "oasis_storage_successes" // godoc: metric
+	MetricStorageSuccesses     = "oasis_storage_successes"
 	MetricStorageSuccessesHelp = "Number of storage successes."
-	MetricStorageLatency       = "oasis_storage_latency" // godoc: metric
+	MetricStorageLatency       = "oasis_storage_latency"
 	MetricStorageLatencyHelp   = "Storage call latency (seconds)."
-	MetricStorageValueSize     = "oasis_storage_value_size" // godoc: metric
+	MetricStorageValueSize     = "oasis_storage_value_size"
 	MetricStorageValueSizeHelp = "Storage call value size (bytes)."
 )
 

@@ -37,7 +37,7 @@ import (
 )
 
 const (
-	MetricWorkerTxnschedulerIncomingQueueSize     = "oasis_worker_txnscheduler_incoming_queue_size" // godoc: metric
+	MetricWorkerTxnschedulerIncomingQueueSize     = "oasis_worker_txnscheduler_incoming_queue_size"
 	MetricWorkerTxnschedulerIncomingQueueSizeHelp = "Size of the incoming queue (number of entries)."
 )
 

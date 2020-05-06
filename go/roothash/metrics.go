@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	MetricFinalizedRounds           = "oasis_finalized_rounds" // godoc: metric
+	MetricFinalizedRounds           = "oasis_finalized_rounds"
 	MetricFinalizedRoundsHelp       = "Number of finalized rounds."
-	MetricRoothashBlockInterval     = "oasis_roothash_block_interval" // godoc: metric
+	MetricRoothashBlockInterval     = "oasis_roothash_block_interval"
 	MetricRoothashBlockIntervalHelp = "Time between roothash blocks (seconds)."
 )
 

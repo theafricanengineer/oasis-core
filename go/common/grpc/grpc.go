@@ -35,11 +35,11 @@ const (
 	maxRecvMsgSize = 104857600 // 100 MiB
 	maxSendMsgSize = 104857600 // 100 MiB
 
-	MetricGrpcCalls            = "oasis_grpc_calls" // godoc: metric
+	MetricGrpcCalls            = "oasis_grpc_calls"
 	MetricGrpcCallsHelp        = "Number of gRPC calls."
-	MetricGrpcLatency          = "oasis_grpc_latency" // godoc: metric
+	MetricGrpcLatency          = "oasis_grpc_latency"
 	MetricGrpcLatencyHelp      = "gRPC call latency (seconds)."
-	MetricGrpcStreamWrites     = "oasis_grpc_stream_writes" // godoc: metric
+	MetricGrpcStreamWrites     = "oasis_grpc_stream_writes"
 	MetricGrpcStreamWritesHelp = "Number of gRPC stream writes."
 )
 

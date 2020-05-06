@@ -29,7 +29,7 @@ const (
 	CfgMetricsJobName  = "metrics.job_name"
 	CfgMetricsInterval = "metrics.interval"
 
-	MetricUp     = "oasis_up" // godoc: metric
+	MetricUp     = "oasis_up"
 	MetricUpHelp = "Is oasis-test-runner active for specific test."
 
 	MetricsJobTestRunner = "oasis-test-runner"

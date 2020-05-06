@@ -1,8 +1,10 @@
 OASIS_GO_SRC="../go/"
 
-all: oasis-node
+all: update
 
-oasis-node: oasis-node-metrics
-
-oasis-node-metrics:
+update:
 	../scripts/generate-metrics-docs.py ${OASIS_GO_SRC} oasis-node/metrics.md.tpl > oasis-node/metrics.md
+
+.PHONY:
+	all
+	update

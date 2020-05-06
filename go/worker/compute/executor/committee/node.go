@@ -36,19 +36,19 @@ import (
 )
 
 const (
-	MetricWorkerExecutionDiscrepancyDetectedCount     = "oasis_worker_execution_discrepancy_detected_count" // godoc: metric
+	MetricWorkerExecutionDiscrepancyDetectedCount     = "oasis_worker_execution_discrepancy_detected_count"
 	MetricWorkerExecutionDiscrepancyDetectedCountHelp = "Number of detected execute discrepancies."
-	MetricWorkerAbortedBatchCount                     = "oasis_worker_aborted_batch_count" // godoc: metric
+	MetricWorkerAbortedBatchCount                     = "oasis_worker_aborted_batch_count"
 	MetricWorkerAbortedBatchCountHelp                 = "Number of aborted batches."
-	MetricWorkerStorageCommitLatency                  = "oasis_worker_storage_commit_latency" // godoc: metric
+	MetricWorkerStorageCommitLatency                  = "oasis_worker_storage_commit_latency"
 	MetricWorkerStorageCommitLatencyHelp              = "Latency of storage commit calls (state + outputs) (seconds)."
-	MetricWorkerBatchReadTime                         = "oasis_worker_batch_read_time" // godoc: metric
+	MetricWorkerBatchReadTime                         = "oasis_worker_batch_read_time"
 	MetricWorkerBatchReadTimeHelp                     = "Time it takes to read a batch from storage (seconds)."
-	MetricWorkerBatchProcessingTime                   = "oasis_worker_batch_processing_time" // godoc: metric
+	MetricWorkerBatchProcessingTime                   = "oasis_worker_batch_processing_time"
 	MetricWorkerBatchProcessingTimeHelp               = "Time it takes for a batch to finalize (seconds)."
-	MetricWorkerBatchRuntimeProcessingTime            = "oasis_worker_batch_runtime_processing_time" // godoc: metric
+	MetricWorkerBatchRuntimeProcessingTime            = "oasis_worker_batch_runtime_processing_time"
 	MetricWorkerBatchRuntimeProcessingTimeHelp        = "Time it takes for a batch to be processed by the runtime (seconds)."
-	MetricWorkerBatchSize                             = "oasis_worker_batch_size" // godoc: metric
+	MetricWorkerBatchSize                             = "oasis_worker_batch_size"
 	MetricWorkerBatchSizeHelp                         = "Number of transactions in a batch."
 )
 

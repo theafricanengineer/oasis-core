@@ -15,11 +15,11 @@ import (
 const (
 	metricsUpdateInterval = 10 * time.Second
 
-	MetricRegistryNodes        = "oasis_registry_nodes" // godoc: metric
+	MetricRegistryNodes        = "oasis_registry_nodes"
 	MetricRegistryNodesHelp    = "Number of registry nodes."
-	MetricRegistryEntities     = "oasis_registry_entities" // godoc: metric
+	MetricRegistryEntities     = "oasis_registry_entities"
 	MetricRegistryEntitiesHelp = "Number of registry entities."
-	MetricRegistryRuntimes     = "oasis_registry_runtimes" // godoc: metric
+	MetricRegistryRuntimes     = "oasis_registry_runtimes"
 	MetricRegistryRuntimesHelp = "Number of registry runtimes."
 )
 

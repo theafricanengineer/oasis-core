@@ -13,11 +13,11 @@ import (
 )
 
 const (
-	MetricDiskUsageBytes       = "oasis_node_disk_usage_bytes" // godoc: metric
+	MetricDiskUsageBytes       = "oasis_node_disk_usage_bytes"
 	MetricDiskUsageBytesHelp   = "Size of datadir of the worker (bytes)."
-	MetricDiskReadBytes        = "oasis_node_disk_read_bytes" // godoc: metric
+	MetricDiskReadBytes        = "oasis_node_disk_read_bytes"
 	MetricDiskReadBytesHelp    = "Read data from block storage by the worker as reported by /proc/<PID>/io (bytes)."
-	MetricDiskWrittenBytes     = "oasis_node_disk_written_bytes" // godoc: metric
+	MetricDiskWrittenBytes     = "oasis_node_disk_written_bytes"
 	MetricDiskWrittenBytesHelp = "Written data from block storage by the worker as reported by /proc/<PID>/io (bytes)"
 )
 

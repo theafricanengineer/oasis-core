@@ -13,7 +13,7 @@ import (
 const (
 	maxMessageSize = 104857600 // 100 MiB
 
-	MetricCodecSize     = "oasis_codec_size" // godoc: metric
+	MetricCodecSize     = "oasis_codec_size"
 	MetricCodecSizeHelp = "CBOR codec message size (bytes)."
 )
 

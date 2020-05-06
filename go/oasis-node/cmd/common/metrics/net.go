@@ -9,13 +9,13 @@ import (
 )
 
 const (
-	MetricNetReceiveBytesTotal        = "oasis_node_net_receive_bytes_total" // godoc: metric
+	MetricNetReceiveBytesTotal        = "oasis_node_net_receive_bytes_total"
 	MetricNetReceiveBytesTotalHelp    = "Received data for each network device as reported by /proc/net/dev (bytes)."
-	MetricNetReceivePacketsTotal      = "oasis_node_net_receive_packets_total" // godoc: metric
+	MetricNetReceivePacketsTotal      = "oasis_node_net_receive_packets_total"
 	MetricNetReceivePacketsTotalHelp  = "Received data for each network device as reported by /proc/net/dev (packets)."
-	MetricNetTransmitBytesTotal       = "oasis_node_net_transmit_bytes_total" // godoc: metric
+	MetricNetTransmitBytesTotal       = "oasis_node_net_transmit_bytes_total"
 	MetricNetTransmitBytesTotalHelp   = "Transmitted data for each network device as reported by /proc/net/dev (bytes)."
-	MetricNetTransmitPacketsTotal     = "oasis_node_net_transmit_packets_total" // godoc: metric
+	MetricNetTransmitPacketsTotal     = "oasis_node_net_transmit_packets_total"
 	MetricNetTransmitPacketsTotalHelp = "Transmitted data for each network device as reported by /proc/net/dev (packets)."
 )
 

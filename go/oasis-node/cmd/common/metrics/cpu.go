@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	MetricCPUUTimeSeconds     = "oasis_node_cpu_utime_seconds" // godoc: metric
+	MetricCPUUTimeSeconds     = "oasis_node_cpu_utime_seconds"
 	MetricCPUUTimeSecondsHelp = "CPU user time spent by worker as reported by /proc/<PID>/stat (seconds)."
-	MetricCPUSTimeSeconds     = "oasis_node_cpu_stime_seconds" // godoc: metric
+	MetricCPUSTimeSeconds     = "oasis_node_cpu_stime_seconds"
 	MetricCPUSTimeSecondsHelp = "CPU system time spent by worker as reported by /proc/<PID>/stat (seconds)."
 
 	// getconf CLK_TCK

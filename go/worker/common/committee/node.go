@@ -21,13 +21,13 @@ import (
 )
 
 const (
-	MetricWorkerProcessedBlockCount      = "oasis_worker_processed_block_count" // godoc: metric
+	MetricWorkerProcessedBlockCount      = "oasis_worker_processed_block_count"
 	MetricWorkerProcessedBlockCountHelp  = "Number of processed roothash blocks."
-	MetricWorkerProcessedEventCount      = "oasis_worker_processed_event_count" // godoc: metric
+	MetricWorkerProcessedEventCount      = "oasis_worker_processed_event_count"
 	MetricWorkerProcessedEventCountHelp  = "Number of processed roothash events."
-	MetricWorkerFailedRoundCount         = "oasis_worker_failed_round_count" // godoc: metric
+	MetricWorkerFailedRoundCount         = "oasis_worker_failed_round_count"
 	MetricWorkerFailedRoundCountHelp     = "Number of failed roothash rounds."
-	MetricWorkerEpochTransitionCount     = "oasis_worker_epoch_transition_count" // godoc: metric
+	MetricWorkerEpochTransitionCount     = "oasis_worker_epoch_transition_count"
 	MetricWorkerEpochTransitionCountHelp = "Number of epoch transitions."
 )
 

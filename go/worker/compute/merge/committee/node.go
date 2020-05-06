@@ -30,13 +30,13 @@ import (
 )
 
 const (
-	MetricWorkerMergeDiscrepancyDetectedCount     = "oasis_worker_merge_discrepancy_detected_count" // godoc: metric
+	MetricWorkerMergeDiscrepancyDetectedCount     = "oasis_worker_merge_discrepancy_detected_count"
 	MetricWorkerMergeDiscrepancyDetectedCountHelp = "Number of detected merge discrepancies."
-	MetricWorkerRoothashMergeCommitLatency        = "oasis_worker_roothash_merge_commit_latency" // godoc: metric
+	MetricWorkerRoothashMergeCommitLatency        = "oasis_worker_roothash_merge_commit_latency"
 	MetricWorkerRoothashMergeCommitLatencyHelp    = "Latency of roothash merge commit (seconds)."
-	MetricWorkerAbortedMergeCount                 = "oasis_worker_aborted_merge_count" // godoc: metric
+	MetricWorkerAbortedMergeCount                 = "oasis_worker_aborted_merge_count"
 	MetricWorkerAbortedMergeCountHelp             = "Number of aborted merges."
-	MetricWorkerInconsistentMergeRootCount        = "oasis_worker_inconsistent_merge_root_count" // godoc: metric
+	MetricWorkerInconsistentMergeRootCount        = "oasis_worker_inconsistent_merge_root_count"
 	MetricWorkerInconsistentMergeRootCountHelp    = "Number of inconsistent merge roots."
 )
 
